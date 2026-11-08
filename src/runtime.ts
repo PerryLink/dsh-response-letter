@@ -81,6 +81,35 @@ function isInside(root: string, candidate: string): boolean {
   return candidate === root || candidate.startsWith(root.endsWith(path.sep) ? root : `${root}${path.sep}`)
 }
 
+/** Validate comment objects arriving from the tool's JSON boundary. */
+function assertComments(value: unknown): ReviewComment[] {
+  if (!Array.isArray(value) || value.length === 0) throw new LetterError('INVALID_INPUT', 'comments must be a non-empty array from letter_parse')
+  for (const item of value) {
+    if (typeof item !== 'object' || item === null) throw new LetterError('INVALID_INPUT', 'every comment must be an object from letter_parse')
+    const comment = item as Partial<ReviewComment>
+    if (typeof comment.number !== 'number' || !Number.isInteger(comment.number) || comment.number < 1) {
+      throw new LetterError('INVALID_INPUT', 'every comment needs a positive integer number')
+    }
+    if (typeof comment.text !== 'string') throw new LetterError('INVALID_INPUT', 'every comment needs a text string')
+    if (comment.reviewer !== undefined && typeof comment.reviewer !== 'string') throw new LetterError('INVALID_INPUT', 'comment.reviewer must be a string when present')
+  }
+  return value as ReviewComment[]
+}
+
+/** Validate response objects arriving from the tool's JSON boundary. */
+function assertResponses(value: unknown): ParsedResponse[] {
+  if (!Array.isArray(value)) throw new LetterError('INVALID_INPUT', 'responses must be an array from letter_check')
+  for (const item of value) {
+    if (typeof item !== 'object' || item === null) throw new LetterError('INVALID_INPUT', 'every response must be an object from letter_check')
+    const response = item as Partial<ParsedResponse>
+    if (typeof response.number !== 'number' || !Number.isInteger(response.number) || response.number < 1) {
+      throw new LetterError('INVALID_INPUT', 'every response needs a positive integer number')
+    }
+    if (typeof response.text !== 'string') throw new LetterError('INVALID_INPUT', 'every response needs a text string')
+  }
+  return value as ParsedResponse[]
+}
+
 /** The runtime. */
 export class LetterRuntime {
   readonly config: ResolvedConfig
@@ -206,7 +235,7 @@ export class LetterRuntime {
    * @returns coverage plus the parsed responses.
    */
   async check(request: CheckRequest): Promise<CheckValue> {
-    let comments = request.comments
+    let comments: readonly ReviewComment[] | undefined = request.comments === undefined ? undefined : assertComments(request.comments)
     if (comments === undefined) {
       const parsed = await this.parse({
         ...(request.reviewText === undefined ? {} : { text: request.reviewText }),
@@ -233,8 +262,9 @@ export class LetterRuntime {
    * @returns Markdown text and coverage.
    */
   buildLetter(comments: readonly ReviewComment[], responses: readonly ParsedResponse[], title = 'Response to reviewers'): { markdown: string; coverage: CoverageResult } {
-    if (comments.length === 0) throw new LetterError('INVALID_INPUT', 'there are no comments')
-    const coverage = checkCoverage(comments, responses)
-    return { markdown: `${renderResponseLetter(comments, responses, title)}\n${renderCoverageMarkdown(coverage)}`, coverage }
+    const safeComments = assertComments(comments)
+    const safeResponses = assertResponses(responses)
+    const coverage = checkCoverage(safeComments, safeResponses)
+    return { markdown: `${renderResponseLetter(safeComments, safeResponses, title)}\n${renderCoverageMarkdown(coverage)}`, coverage }
   }
 }

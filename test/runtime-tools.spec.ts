@@ -3,7 +3,7 @@
  * @module test/runtime-tools.spec
  */
 
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { validateRep } from '@perrylink/dsh-research-core'
@@ -66,6 +66,17 @@ describe('runtime', () => {
     const tiny = new LetterRuntime({ config: resolveConfig({ workspaceRoot: workspace, root: store, maxChars: 10 }), now: () => AT })
     await expect(tiny.parse({ text: REVIEW })).rejects.toMatchObject({ code: 'TOO_LARGE' })
   })
+
+  it.runIf(process.platform !== 'win32')('rejects a symlink that escapes the workspace', async () => {
+    const outside = await mkdtemp(path.join(tmpdir(), 'letter-outside-'))
+    try {
+      await writeFile(path.join(outside, 'secret.md'), REVIEW, 'utf8')
+      await symlink(path.join(outside, 'secret.md'), path.join(workspace, 'linked.md'))
+      await expect(runtime().parse({ path: 'linked.md' })).rejects.toMatchObject({ code: 'PATH_ESCAPE' })
+    } finally {
+      if (outside.startsWith(tmpdir())) await rm(outside, { recursive: true, force: true })
+    }
+  })
 })
 
 describe('tools', () => {
@@ -104,6 +115,15 @@ describe('tools', () => {
     const value = (await makeLetterParseTool(runtime()).execute({}, EXEC)) as { ok: false; error: { code: string } }
     expect(value.ok).toBe(false)
     expect(value.error.code).toBe('INVALID_INPUT')
+
+    const malformedComments = (await makeLetterCheckTool(runtime()).execute({ comments: [{ number: '1', text: 'x' }], letterText: LETTER }, EXEC)) as { ok: false; error: { code: string } }
+    expect(malformedComments.ok).toBe(false)
+    expect(malformedComments.error.code).toBe('INVALID_INPUT')
+
+    const parsed = await runtime().parse({ path: 'review.md', persist: false })
+    const malformedResponses = (await makeLetterExportTool(runtime()).execute({ comments: parsed.parse.comments, responses: [{ number: 1, text: 42 }] }, EXEC)) as { ok: false; error: { code: string } }
+    expect(malformedResponses.ok).toBe(false)
+    expect(malformedResponses.error.code).toBe('INVALID_INPUT')
   })
 })
 

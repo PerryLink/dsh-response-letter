@@ -32,10 +32,10 @@ export interface ParseResult {
 }
 
 /** A reviewer header. */
-const REVIEWER_HEADER = /^\s*(?:reviewer|referee|审稿人|专家)\s*#?\s*(\d+)\s*[:：.]?\s*$/i
+const REVIEWER_HEADER = /^\s*(?:reviewer|referee|审稿人|专家|r)\s*#?\s*(\d+)\s*[:：.]?\s*$/i
 
-/** A numbered comment marker at the start of a line. */
-const NUMBERED = /^\s*(?:comment|question|point|意见|问题)?\s*#?(\d{1,3})\s*[.):：、]\s+(.+)$/i
+/** A numbered comment marker at the start of a line (tolerates a CRLF line ending). */
+const NUMBERED = /^\s*(?:comment|question|point|意见|问题)?\s*#?(\d{1,3})\s*[.):：、]\s+(.+?)\r?$/i
 
 /** Extract reviewer sections with their start offsets. */
 function reviewerSections(text: string): Array<{ label: string; start: number; end: number }> {
@@ -99,7 +99,7 @@ export function parseComments(text: string): ParseResult {
     const blocks = segment.split(/\n\s*\n/u)
     let cursor = range.start
     for (const block of blocks) {
-      const cleaned = block.trim()
+      const cleaned = block.replace(/\r\n?/gu, '\n').trim()
       const index = text.indexOf(block, cursor)
       cursor = index === -1 ? cursor : index + block.length
       if (cleaned === '' || REVIEWER_HEADER.test(cleaned)) continue
@@ -132,7 +132,7 @@ export function extractResponses(text: string): { responses: ParsedResponse[]; w
   let offset = 0
   const flush = (): void => {
     if (current === undefined) return
-    const body = current.lines.join('\n').trim()
+    const body = current.lines.join('\n').replace(/\r\n?/gu, '\n').trim()
     responses.push({ number: current.number, text: body, charStart: current.start, charEnd: current.start + body.length })
     current = undefined
   }

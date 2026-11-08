@@ -80,7 +80,7 @@ dsh --profile <name> --dump-config | grep dsh-response-letter
 
 ## Evaluation
 
-**15 tests**: numbered parsing with reviewer headers, paragraph fallback with warning, empty-text rejection, response extraction, full/partial coverage (missing, short, extra), duplicate numbers, runtime (valid REP record, file and text paths, traversal/DOCX/oversize rejection), tools (schemas, parse→check→export end-to-end, failure branch), package contract.
+**21 tests**: numbered parsing with reviewer headers (including `R1`) and CRLF text, paragraph fallback with warning, empty-text rejection, response extraction, full/partial coverage (missing, short, extra), duplicate numbers and duplicate-export consistency, runtime (valid REP record, file and text paths, traversal/symlink/DOCX/oversize rejection, malformed JSON payloads), tools (schemas, parse→check→export end-to-end, failure branch), plugin contract, package contract.
 
 No benchmark is claimed: correctness here is parsing behavior on explicit formats, checked with fixtures; there is no labelled corpus of real review letters.
 

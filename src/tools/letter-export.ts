@@ -5,7 +5,7 @@
 
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import { LetterError, type LetterRuntime } from '../runtime.ts'
-import { extractResponses, type ReviewComment } from '../parse.ts'
+import { extractResponses, type ParsedResponse, type ReviewComment } from '../parse.ts'
 import { ERROR_SCHEMA } from './shared.ts'
 
 const OUTPUT_SCHEMA = {
@@ -47,7 +47,7 @@ export function makeLetterExportTool(runtime: LetterRuntime) {
       },
     },
     async execute(args: unknown) {
-      const request = args as { comments?: ReviewComment[]; responses?: never; letterText?: string; title?: string }
+      const request = args as { comments?: ReviewComment[]; responses?: ParsedResponse[]; letterText?: string; title?: string }
       try {
         if (request.comments === undefined || request.comments.length === 0) throw new LetterError('INVALID_INPUT', 'pass the comments from letter_parse')
         const responses = request.responses !== undefined ? request.responses : extractResponses(request.letterText ?? '').responses

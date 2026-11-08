@@ -6,6 +6,7 @@
 import { describe, expect, it } from 'vitest'
 import { checkCoverage, MIN_RESPONSE_CHARS } from '../src/check.ts'
 import { extractResponses, parseComments } from '../src/parse.ts'
+import { renderResponseLetter } from '../src/report.ts'
 
 const REVIEW = `Reviewer 1
 
@@ -33,6 +34,23 @@ describe('parseComments', () => {
     expect(result.mode).toBe('paragraph')
     expect(result.comments).toHaveLength(2)
     expect(result.warnings.join(' ')).toContain('paragraphs')
+  })
+
+  it('recognizes R1/R2 reviewer headers', () => {
+    const result = parseComments('R1\n\n1. The sample size is not justified.\n\nR2\n\n2. The discussion is thin.')
+    expect(result.mode).toBe('numbered')
+    expect(result.comments.map(comment => comment.reviewer)).toEqual(['Reviewer 1', 'Reviewer 2'])
+  })
+
+  it('parses CRLF review text and response letters', () => {
+    const review = REVIEW.replace(/\n/gu, '\r\n')
+    const parsed = parseComments(review)
+    expect(parsed.mode).toBe('numbered')
+    expect(parsed.comments).toHaveLength(4)
+    const letter = '1. We added a power calculation and explain the sample size.\r\n\r\n2. We now describe the randomization method in detail.\r\n'
+    const { responses } = extractResponses(letter)
+    expect(responses).toHaveLength(2)
+    expect(responses[0]!.text).not.toContain('\r')
   })
 
   it('rejects empty text', () => {
@@ -70,10 +88,11 @@ describe('checkCoverage', () => {
   })
 
   it('flags a response that cites a number with no comment', () => {
-    const { responses } = extractResponses('1. A sufficiently long response that addresses the first point fully.\n\n9. This number has no matching comment at all, which is a problem.')
+    const { responses } = extractResponses('1. A sufficiently long response that addresses the first point fully.\n\n9. This number has no matching comment at all, which is a problem.\n\n9. A duplicate of that unmatched number, also long enough.')
     const result = checkCoverage(comments, responses)
     expect(result.extra).toBe(1)
     expect(result.findings.some(finding => finding.commentNumber === 9 && finding.status === 'extra')).toBe(true)
+    expect(result.warnings.join(' ')).toContain('response number 9 appears 2 times')
   })
 
   it('uses the first response when a number repeats', () => {
@@ -85,5 +104,15 @@ describe('checkCoverage', () => {
 
   it('keeps the minimum response length explicit', () => {
     expect(MIN_RESPONSE_CHARS).toBe(20)
+  })
+
+  it('exports the same first response that coverage used when a number repeats', () => {
+    const comments = parseComments(REVIEW).comments
+    const { responses } = extractResponses(`1. First answer long enough to pass the short-answer check comfortably.\n\n1. Second answer for the same number, also long enough to pass.`)
+    const result = checkCoverage(comments, responses)
+    expect(result.findings.find(finding => finding.commentNumber === 1)?.responsePreview).toContain('First answer')
+    const markdown = renderResponseLetter(comments, responses)
+    expect(markdown).toContain('First answer')
+    expect(markdown).not.toContain('Second answer')
   })
 })

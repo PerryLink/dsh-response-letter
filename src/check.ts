@@ -55,6 +55,9 @@ export function checkCoverage(comments: readonly ReviewComment[], responses: rea
   let answered = 0
   let missing = 0
   let empty = 0
+  for (const [number, list] of byNumber) {
+    if (list.length > 1) warnings.push(`response number ${number} appears ${list.length} times; the first is used`)
+  }
   const commentNumbers = new Set(comments.map(comment => comment.number))
   for (const comment of comments) {
     const list = byNumber.get(comment.number) ?? []
@@ -63,7 +66,6 @@ export function checkCoverage(comments: readonly ReviewComment[], responses: rea
       findings.push({ commentNumber: comment.number, ...(comment.reviewer === '' ? {} : { reviewer: comment.reviewer }), status: 'missing', detail: `no response cites number ${comment.number}` })
       continue
     }
-    if (list.length > 1) warnings.push(`response number ${comment.number} appears ${list.length} times; the first is used`)
     const response = list[0]!
     if (response.text.trim().length < MIN_RESPONSE_CHARS) {
       empty += 1

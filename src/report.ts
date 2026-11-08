@@ -19,7 +19,10 @@ function cell(value: string): string {
  * @returns Markdown text.
  */
 export function renderResponseLetter(comments: readonly ReviewComment[], responses: readonly ParsedResponse[], title = 'Response to reviewers'): string {
-  const byNumber = new Map(responses.map(response => [response.number, response]))
+  // The coverage check uses the first response for a repeated number; the
+  // export must show the same answer, not the last one.
+  const byNumber = new Map<number, ParsedResponse>()
+  for (const response of responses) if (!byNumber.has(response.number)) byNumber.set(response.number, response)
   const lines = [`# ${title}`, '']
   lines.push(`We thank the reviewers for their comments. ${comments.length} point(s) are answered below; the numbering matches the review.`)
   lines.push('')

@@ -17,7 +17,7 @@
 - **`letter_check`** — matches response numbers to comment numbers and reports: missing numbers, answers shorter than 20 characters, duplicate response numbers, and responses citing a number that no comment has.
 - **`letter_export`** — a Markdown table (#, reviewer, comment, response) with unanswered points in bold, plus the coverage table. Markdown is the deliverable; nothing is emailed or uploaded.
 
-## 它做什么 not do
+## 它不做什么
 
 - **No adequacy judgement.** Coverage counts numbered answers; it does not say whether an answer is convincing, polite or evidence-based.
 - **No reviewer text editing.** Comments are reproduced verbatim; the author writes the responses.
@@ -80,7 +80,7 @@ dsh --profile <name> --dump-config | grep dsh-response-letter
 
 ## 评测
 
-**15 tests**: numbered parsing with reviewer headers, paragraph fallback with warning, empty-text rejection, response extraction, full/partial coverage (missing, short, extra), duplicate numbers, runtime (valid REP record, file and text paths, traversal/DOCX/oversize rejection), tools (schemas, parse→check→export end-to-end, failure branch), package contract.
+**21 tests**: numbered parsing with reviewer headers (including `R1`) and CRLF text, paragraph fallback with warning, empty-text rejection, response extraction, full/partial coverage (missing, short, extra), duplicate numbers and duplicate-export consistency, runtime (valid REP record, file and text paths, traversal/symlink/DOCX/oversize rejection, malformed JSON payloads), tools (schemas, parse→check→export end-to-end, failure branch), plugin contract, package contract.
 
 No benchmark is claimed: correctness here is parsing behavior on explicit formats, checked with fixtures; there is no labelled corpus of real review letters.
 
