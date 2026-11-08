@@ -1,0 +1,14 @@
+# dsh-response-letter bundle patch: mount the review-response tools.
+#
+# Every key below is a Config field (Schemastery schema); invalid values fail the
+# profile load loudly. Local text only; nothing is sent anywhere.
+- insert:
+    - id: dsh-response-letter
+      name: dsh-response-letter
+      config:
+        enabled: true
+        root: .response-letter
+        # Character cap: over-limit fails, never truncates.
+        maxChars: 1000000
+        # Store parsed reviews as REP evidence + record.
+        persist: true
