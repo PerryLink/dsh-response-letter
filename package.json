@@ -1,6 +1,6 @@
 {
   "name": "dsh-response-letter",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Reviewer-response workflow for DeepSeek Harness: parse reviewer comments (Reviewer/Referee/审稿人 headers, numbered or paragraph mode) with locators, check point-by-point coverage by response number (missing, too short, extra, duplicates), and export a Markdown response letter with a coverage table. Parsed reviews become REP evidence; coverage counts answers, it does not judge adequacy.",
   "author": "PerryLink contributors",
   "repository": {
