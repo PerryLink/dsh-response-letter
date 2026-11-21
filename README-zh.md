@@ -99,7 +99,7 @@ dsh --profile <name> --dump-config | grep dsh-response-letter
 
 ![dsh-response-letter 评测：本 checkout 里真实跑通的测试套件 —— 4 个文件 22 条测试全过，覆盖解析、覆盖检查、运行时、工具与插件/包契约](docs/assets/dsh-response-letter-demo.gif)
 
-*动图是真实的 `pnpm exec vitest run --reporter=verbose` 输出与包门禁（2026-11-21 复跑；当前套件共 22 条测试，下面的评测段落写的是 22 条）。解析与覆盖都用显式 fixture 验证，全程不联网。*
+*动图是真实的 `pnpm exec vitest run --reporter=verbose` 输出与包门禁（2026-11-21 复跑；当前套件共 22 条测试）。解析与覆盖都用显式 fixture 验证，全程不联网。*
 
 
 **22 个测试**：带审稿人标题（含 `R1`）和 CRLF 文本的编号解析、段落回退及警告、空文本拒绝、回复提取、完整/部分覆盖（缺失、过短、多余）、重复编号与重复导出的一致性、运行时（有效的 REP 记录、文件和文本路径、路径穿越/符号链接/DOCX/超大文件拒绝、畸形 JSON 载荷）、工具（schema、parse→check→export 端到端、失败分支）、插件契约、包契约。

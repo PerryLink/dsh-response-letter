@@ -99,7 +99,7 @@ dsh --profile <name> --dump-config | grep dsh-response-letter
 
 ![dsh-response-letter evaluación: la suite de pruebas real de este checkout — 22 pruebas en 4 archivos pasan en análisis, cobertura, runtime, herramientas y contrato del plugin/paquete](docs/assets/dsh-response-letter-demo.gif)
 
-*Animado: la salida real de `pnpm exec vitest run --reporter=verbose` y la puerta del paquete (reejecutado el 2026-11-21; hoy la suite tiene 22 pruebas — el párrafo de evaluación de abajo sigue contando 22). El análisis y la cobertura se comprueban con fixtures explícitos; nada de esto toca la red.*
+*Animado: la salida real de `pnpm exec vitest run --reporter=verbose` y la puerta del paquete (reejecutado el 2026-11-21; hoy la suite tiene 22 pruebas). El análisis y la cobertura se comprueban con fixtures explícitos; nada de esto toca la red.*
 
 
 **22 pruebas**: análisis numerado con encabezados de revisor (incluido `R1`) y texto CRLF, respaldo por párrafos con advertencia, rechazo de texto vacío, extracción de respuestas, cobertura total/parcial (faltante, corta, sobrante), números duplicados y consistencia de la exportación duplicada, runtime (registro REP válido, rutas de archivo y texto, rechazo de traversal/symlink/DOCX/tamaño excesivo, cargas JSON malformadas), herramientas (esquemas, parse→check→export de extremo a extremo, rama de fallo), contrato del plugin, contrato del paquete.
