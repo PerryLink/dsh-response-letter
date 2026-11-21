@@ -1,13 +1,22 @@
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-response-letter-hero-zh-dark.webp">
+  <img src="docs/assets/dsh-response-letter-hero-zh-light.webp" width="100%" alt="dsh-response-letter 配图：一份来自 Reviewer 1 / Reviewer 2 的 4 条意见的审稿，对照 3 条带编号回复逐条核对——#1 answered、#3 仅 6 个字符记 empty、#4 missing；右侧是覆盖计数与 REP 证据记录">
+</picture>
+
 # dsh-response-letter
 
 **每一条审稿意见都有回复——而且可以按编号核实。**
 
 *解析审稿意见（Reviewer/Referee/审稿人 标题行，编号模式或段落模式），按回复编号检查逐条回复信（缺失、过短、多余、重复），并导出带覆盖表的 Markdown 回复信。*
 
+[English](README.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
+
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%5E22.19%20%7C%7C%20%3E%3D24.9-brightgreen.svg)]()
 
-[English](README.md) · 简体中文
+</div>
 
 ---
 
@@ -16,6 +25,14 @@
 - **`letter_parse`** — 识别 `Reviewer 1`、`Referee #2`、`审稿人 2`、`R1` 标题行以及编号标记（`1.`、`2)`、`Comment 3:`、`Q4:`），为每条意见分配一个**全局编号**（也就是回复必须引用的编号）、一个审稿人标签和一个字符位置。没有编号时回退到按段落解析，并给出明确警告。
 - **`letter_check`** — 把回复编号与意见编号对应起来，并报告：缺失的编号、少于 20 个字符的回复、重复的回复编号，以及引用了不存在意见编号的回复。
 - **`letter_export`** — 输出一张 Markdown 表格（#、审稿人、意见、回复），未回答的条目加粗，并附覆盖表。Markdown 就是交付物；不发送邮件，也不上传任何内容。
+
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-response-letter-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-response-letter-flow-v5-light.svg" width="100%" alt="dsh-response-letter 结构图：审稿意见被解析为全局编号 1..N 的意见，逐条回复信按回复编号匹配（缺失、短于 20 个字符、多余、重复），输出覆盖计数与 Markdown 回复信；图内是真实的工具名、标记与输出字段名，五语共用同一张图">
+</picture>
+
+*结构：解析 → 核对 → 导出；`coverage` 与 `findings[]` 是两项检查输出，`letter_export` 只产出 Markdown。图内只有工具名、标记与字段名，五语共用同一张结构图。*
 
 ## 它不做什么
 
@@ -79,6 +96,11 @@ dsh --profile <name> --dump-config | grep dsh-response-letter
 - 审稿意见一律视为数据；其中的任何指令性文本都不会被执行（插件没有执行器）。
 
 ## 评测
+
+![dsh-response-letter 评测：本 checkout 里真实跑通的测试套件 —— 4 个文件 22 条测试全过，覆盖解析、覆盖检查、运行时、工具与插件/包契约](docs/assets/dsh-response-letter-demo.gif)
+
+*动图是真实的 `pnpm exec vitest run --reporter=verbose` 输出与包门禁（2026-11-21 复跑；当前套件共 22 条测试，下面的评测段落写的是 21 条）。解析与覆盖都用显式 fixture 验证，全程不联网。*
+
 
 **21 个测试**：带审稿人标题（含 `R1`）和 CRLF 文本的编号解析、段落回退及警告、空文本拒绝、回复提取、完整/部分覆盖（缺失、过短、多余）、重复编号与重复导出的一致性、运行时（有效的 REP 记录、文件和文本路径、路径穿越/符号链接/DOCX/超大文件拒绝、畸形 JSON 载荷）、工具（schema、parse→check→export 端到端、失败分支）、插件契约、包契约。
 

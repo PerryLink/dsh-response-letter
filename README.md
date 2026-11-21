@@ -1,13 +1,22 @@
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-response-letter-hero-en-dark.webp">
+  <img src="docs/assets/dsh-response-letter-hero-en-light.webp" width="100%" alt="dsh-response-letter: a review of four comments from Reviewer 1 and Reviewer 2 checked against three numbered responses — #1 answered, #3 empty at six characters, #4 missing — with the coverage counts and the REP evidence record on the right">
+</picture>
+
 # dsh-response-letter
 
 **Every reviewer comment answered — and provably so, by number.**
 
 *Parses reviewer comments (Reviewer/Referee/审稿人 headers, numbered or paragraph mode), checks the point-by-point letter by response number (missing, too short, extra, duplicates), and exports a Markdown letter with a coverage table.*
 
+[简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
+
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%5E22.19%20%7C%7C%20%3E%3D24.9-brightgreen.svg)]()
 
-English · [简体中文](README-zh.md)
+</div>
 
 ---
 
@@ -16,6 +25,14 @@ English · [简体中文](README-zh.md)
 - **`letter_parse`** — recognizes `Reviewer 1`, `Referee #2`, `审稿人 2`, `R1` headers and numbered markers (`1.`, `2)`, `Comment 3:`, `Q4:`), assigning a **global number** to every comment (the number a response must cite), a reviewer label and a character locator. Falls back to paragraphs with an explicit warning.
 - **`letter_check`** — matches response numbers to comment numbers and reports: missing numbers, answers shorter than 20 characters, duplicate response numbers, and responses citing a number that no comment has.
 - **`letter_export`** — a Markdown table (#, reviewer, comment, response) with unanswered points in bold, plus the coverage table. Markdown is the deliverable; nothing is emailed or uploaded.
+
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-response-letter-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-response-letter-flow-v5-light.svg" width="100%" alt="dsh-response-letter structure: reviewer comments are parsed into globally numbered comments 1..N, the point-by-point letter is matched by response number (missing, shorter than 20 characters, extra, duplicates), and the result is a coverage count plus a Markdown letter; the tokens in the diagram are the real tool, marker and output names, so all five languages use the same picture">
+</picture>
+
+*Structure: parse → check → export; `coverage` and `findings[]` are the two check outputs, and `letter_export` renders Markdown only. The token labels inside the diagram are the real tool, marker and field names, so the same picture serves all five languages.*
 
 ## What it does not do
 
@@ -79,6 +96,11 @@ dsh --profile <name> --dump-config | grep dsh-response-letter
 - Comments are treated as data; any instruction-like text in them is never executed (the plugin has no executor).
 
 ## Evaluation
+
+![dsh-response-letter evaluation: the real test suite in this checkout — 22 tests in 4 files pass across parsing, coverage, runtime, tools and the plugin/package contract](docs/assets/dsh-response-letter-demo.gif)
+
+*Animated: the real `pnpm exec vitest run --reporter=verbose` output and the package gate (re-run 2026-11-21; the suite has 22 tests today — the evaluation paragraph below still counts 21). Parsing and coverage are checked against explicit fixtures; nothing here touches the network.*
+
 
 **21 tests**: numbered parsing with reviewer headers (including `R1`) and CRLF text, paragraph fallback with warning, empty-text rejection, response extraction, full/partial coverage (missing, short, extra), duplicate numbers and duplicate-export consistency, runtime (valid REP record, file and text paths, traversal/symlink/DOCX/oversize rejection, malformed JSON payloads), tools (schemas, parse→check→export end-to-end, failure branch), plugin contract, package contract.
 
