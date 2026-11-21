@@ -99,10 +99,10 @@ dsh --profile <name> --dump-config | grep dsh-response-letter
 
 ![dsh-response-letter evaluation: the real test suite in this checkout — 22 tests in 4 files pass across parsing, coverage, runtime, tools and the plugin/package contract](docs/assets/dsh-response-letter-demo.gif)
 
-*Animated: the real `pnpm exec vitest run --reporter=verbose` output and the package gate (re-run 2026-11-21; the suite has 22 tests today — the evaluation paragraph below still counts 21). Parsing and coverage are checked against explicit fixtures; nothing here touches the network.*
+*Animated: the real `pnpm exec vitest run --reporter=verbose` output and the package gate (re-run 2026-11-21; the suite has 22 tests today — the evaluation paragraph below still counts 22). Parsing and coverage are checked against explicit fixtures; nothing here touches the network.*
 
 
-**21 tests**: numbered parsing with reviewer headers (including `R1`) and CRLF text, paragraph fallback with warning, empty-text rejection, response extraction, full/partial coverage (missing, short, extra), duplicate numbers and duplicate-export consistency, runtime (valid REP record, file and text paths, traversal/symlink/DOCX/oversize rejection, malformed JSON payloads), tools (schemas, parse→check→export end-to-end, failure branch), plugin contract, package contract.
+**22 tests**: numbered parsing with reviewer headers (including `R1`) and CRLF text, paragraph fallback with warning, empty-text rejection, response extraction, full/partial coverage (missing, short, extra), duplicate numbers and duplicate-export consistency, runtime (valid REP record, file and text paths, traversal/symlink/DOCX/oversize rejection, malformed JSON payloads), tools (schemas, parse→check→export end-to-end, failure branch), plugin contract, package contract.
 
 No benchmark is claimed: correctness here is parsing behavior on explicit formats, checked with fixtures; there is no labelled corpus of real review letters.
 
