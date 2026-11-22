@@ -26,7 +26,6 @@
 - **`letter_check`** — matches response numbers to comment numbers and reports: missing numbers, answers shorter than 20 characters, duplicate response numbers, and responses citing a number that no comment has.
 - **`letter_export`** — a Markdown table (#, reviewer, comment, response) with unanswered points in bold, plus the coverage table. Markdown is the deliverable; nothing is emailed or uploaded.
 
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-response-letter-flow-v5-dark.svg">
   <img src="docs/assets/dsh-response-letter-flow-v5-light.svg" width="100%" alt="dsh-response-letter structure: reviewer comments are parsed into globally numbered comments 1..N, the point-by-point letter is matched by response number (missing, shorter than 20 characters, extra, duplicates), and the result is a coverage count plus a Markdown letter; the tokens in the diagram are the real tool, marker and output names, so all five languages use the same picture">
@@ -68,7 +67,7 @@ Comments are numbered 1..N in document order across reviewers (not per reviewer)
 
 | | |
 |---|---|
-| DeepSeek Harness | **`dsh-v0.2.2-rc.4`** (verified 2026-11-18); peer `>=0.2.1-0 <0.3.0 \|\| >=0.2.2-0 <0.3.0` |
+| DeepSeek Harness | **`dsh-v0.2.3-alpha.1`** (verified 2026-11-22); peer `>=0.2.1-0 <0.3.0 \|\| >=0.2.2-0 <0.3.0` |
 | Node | `^22.19.0 \|\| >=24.9.0` (tested `24.22.1`), ESM only |
 | Peers | `@perrylink/dsh-research-core ^0.1.0`, `@deepseek-ai/cordis ^4.0.5-alpha.1`, `@deepseek-ai/dsh-tools`, `@deepseek-ai/schemastery ^3.18.5-alpha.1` |
 | Runtime dependencies | **zero** |
@@ -100,7 +99,6 @@ dsh --profile <name> --dump-config | grep dsh-response-letter
 ![dsh-response-letter evaluation: the real test suite in this checkout — 22 tests in 4 files pass across parsing, coverage, runtime, tools and the plugin/package contract](docs/assets/dsh-response-letter-demo.gif)
 
 *Animated: the real `pnpm exec vitest run --reporter=verbose` output and the package gate (re-run 2026-11-21; the suite has 22 tests today). Parsing and coverage are checked against explicit fixtures; nothing here touches the network.*
-
 
 **22 tests**: numbered parsing with reviewer headers (including `R1`) and CRLF text, paragraph fallback with warning, empty-text rejection, response extraction, full/partial coverage (missing, short, extra), duplicate numbers and duplicate-export consistency, runtime (valid REP record, file and text paths, traversal/symlink/DOCX/oversize rejection, malformed JSON payloads), tools (schemas, parse→check→export end-to-end, failure branch), plugin contract, package contract.
 

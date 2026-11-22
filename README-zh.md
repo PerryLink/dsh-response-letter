@@ -26,7 +26,6 @@
 - **`letter_check`** — 把回复编号与意见编号对应起来，并报告：缺失的编号、少于 20 个字符的回复、重复的回复编号，以及引用了不存在意见编号的回复。
 - **`letter_export`** — 输出一张 Markdown 表格（#、审稿人、意见、回复），未回答的条目加粗，并附覆盖表。Markdown 就是交付物；不发送邮件，也不上传任何内容。
 
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-response-letter-flow-v5-dark.svg">
   <img src="docs/assets/dsh-response-letter-flow-v5-light.svg" width="100%" alt="dsh-response-letter 结构图：审稿意见被解析为全局编号 1..N 的意见，逐条回复信按回复编号匹配（缺失、短于 20 个字符、多余、重复），输出覆盖计数与 Markdown 回复信；图内是真实的工具名、标记与输出字段名，五语共用同一张图">
@@ -68,7 +67,7 @@
 
 | | |
 |---|---|
-| DeepSeek Harness | **`dsh-v0.2.2-rc.4`**（2026-11-18 实测）；peer `>=0.2.1-0 <0.3.0 \|\| >=0.2.2-0 <0.3.0` |
+| DeepSeek Harness | **`dsh-v0.2.3-alpha.1`**（2026-11-22 实测）；peer `>=0.2.1-0 <0.3.0 \|\| >=0.2.2-0 <0.3.0` |
 | Node | `^22.19.0 \|\| >=24.9.0`（实测 `24.22.1`），仅 ESM |
 | Peer 依赖 | `@perrylink/dsh-research-core ^0.1.0`、`@deepseek-ai/cordis ^4.0.5-alpha.1`、`@deepseek-ai/dsh-tools`、`@deepseek-ai/schemastery ^3.18.5-alpha.1` |
 | 运行时依赖 | **零** |
@@ -100,7 +99,6 @@ dsh --profile <name> --dump-config | grep dsh-response-letter
 ![dsh-response-letter 评测：本 checkout 里真实跑通的测试套件 —— 4 个文件 22 条测试全过，覆盖解析、覆盖检查、运行时、工具与插件/包契约](docs/assets/dsh-response-letter-demo.gif)
 
 *动图是真实的 `pnpm exec vitest run --reporter=verbose` 输出与包门禁（2026-11-21 复跑；当前套件共 22 条测试）。解析与覆盖都用显式 fixture 验证，全程不联网。*
-
 
 **22 个测试**：带审稿人标题（含 `R1`）和 CRLF 文本的编号解析、段落回退及警告、空文本拒绝、回复提取、完整/部分覆盖（缺失、过短、多余）、重复编号与重复导出的一致性、运行时（有效的 REP 记录、文件和文本路径、路径穿越/符号链接/DOCX/超大文件拒绝、畸形 JSON 载荷）、工具（schema、parse→check→export 端到端、失败分支）、插件契约、包契约。
 

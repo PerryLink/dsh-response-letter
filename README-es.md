@@ -26,7 +26,6 @@
 - **`letter_check`** — empareja los números de respuesta con los números de comentario e informa: números faltantes, respuestas de menos de 20 caracteres, números de respuesta duplicados y respuestas que citan un número que ningún comentario tiene.
 - **`letter_export`** — una tabla Markdown (#, revisor, comentario, respuesta) con los puntos sin responder en negrita, más la tabla de cobertura. El entregable es Markdown; no se envía nada por correo ni se sube nada.
 
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-response-letter-flow-v5-dark.svg">
   <img src="docs/assets/dsh-response-letter-flow-v5-light.svg" width="100%" alt="dsh-response-letter estructura: los comentarios del revisor se analizan en comentarios numerados globalmente 1..N, la carta punto por punto se empareja por número de respuesta (faltante, menos de 20 caracteres, sobrante, duplicado) y el resultado es un recuento de cobertura más una carta Markdown; las etiquetas del diagrama son los nombres reales de herramientas, marcadores y campos, así que los cinco idiomas usan la misma imagen">
@@ -68,7 +67,7 @@ Los comentarios se numeran 1..N en el orden del documento y entre todos los revi
 
 | | |
 |---|---|
-| DeepSeek Harness | **`dsh-v0.2.2-rc.4`** (verificado 2026-11-18); peer `>=0.2.1-0 <0.3.0 \|\| >=0.2.2-0 <0.3.0` |
+| DeepSeek Harness | **`dsh-v0.2.3-alpha.1`** (verificado 2026-11-22); peer `>=0.2.1-0 <0.3.0 \|\| >=0.2.2-0 <0.3.0` |
 | Node | `^22.19.0 \|\| >=24.9.0` (probado `24.22.1`), solo ESM |
 | Pares | `@perrylink/dsh-research-core ^0.1.0`, `@deepseek-ai/cordis ^4.0.5-alpha.1`, `@deepseek-ai/dsh-tools`, `@deepseek-ai/schemastery ^3.18.5-alpha.1` |
 | Dependencias en tiempo de ejecución | **cero** |
@@ -100,7 +99,6 @@ dsh --profile <name> --dump-config | grep dsh-response-letter
 ![dsh-response-letter evaluación: la suite de pruebas real de este checkout — 22 pruebas en 4 archivos pasan en análisis, cobertura, runtime, herramientas y contrato del plugin/paquete](docs/assets/dsh-response-letter-demo.gif)
 
 *Animado: la salida real de `pnpm exec vitest run --reporter=verbose` y la puerta del paquete (reejecutado el 2026-11-21; hoy la suite tiene 22 pruebas). El análisis y la cobertura se comprueban con fixtures explícitos; nada de esto toca la red.*
-
 
 **22 pruebas**: análisis numerado con encabezados de revisor (incluido `R1`) y texto CRLF, respaldo por párrafos con advertencia, rechazo de texto vacío, extracción de respuestas, cobertura total/parcial (faltante, corta, sobrante), números duplicados y consistencia de la exportación duplicada, runtime (registro REP válido, rutas de archivo y texto, rechazo de traversal/symlink/DOCX/tamaño excesivo, cargas JSON malformadas), herramientas (esquemas, parse→check→export de extremo a extremo, rama de fallo), contrato del plugin, contrato del paquete.
 
