@@ -7,6 +7,8 @@
 
 # dsh-response-letter
 
+当前版本 `0.1.4`。
+
 **Every reviewer comment answered — and provably so, by number.**
 
 *Parses reviewer comments (Reviewer/Referee/审稿人 headers, numbered or paragraph mode), checks the point-by-point letter by response number (missing, too short, extra, duplicates), and exports a Markdown letter with a coverage table.*
